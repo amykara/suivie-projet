@@ -1,0 +1,23 @@
+{% extends "tracker/base.html" %}
+{% block content %}
+<div class="road"><div class="road-inner">
+  <div class="road-head">
+    <span></span>
+    {% for val, label in months %}<span>{{ label }}</span>{% endfor %}
+  </div>
+  {% for g in goals %}
+  <div class="road-row">
+    <div class="rname">{{ g.name }}</div>
+    <div class="road-track">
+      {% with cols=g.grid_columns %}
+      <div class="road-bar" style="grid-column:{{ cols.0 }}/{{ cols.1 }};background:{{ g.color }}">{{ g.status_label }}</div>
+      {% endwith %}
+      {% if g.deadline_month != None %}
+      <div class="road-deadline" style="left:{{ g.deadline_pct }}%" title="{{ g.deadline_label }}"></div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div></div>
+<p class="road-legend">Chaque barre couvre la période active du chantier. ● marque une échéance clé. Modifie les périodes dans l'onglet "Chantiers".</p>
+{% endblock %}

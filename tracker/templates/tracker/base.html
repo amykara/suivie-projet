@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% block title %}Tableau de bord{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'tracker/style.css' %}">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Année académique &amp; professionnelle</p>
+    <h1>Tableau de bord — 2026–2027</h1>
+    <p class="lede">Six chantiers en parallèle. Aucune porte ne se ferme avant une réponse concrète.</p>
+  </header>
+
+  <div class="tabs">
+    <a class="tab {% if active == 'dash' %}active{% endif %}" href="{% url 'dashboard' %}">Chantiers</a>
+    <a class="tab {% if active == 'road' %}active{% endif %}" href="{% url 'roadmap' %}">Feuille de route</a>
+    <a class="tab {% if active == 'save' %}active{% endif %}" href="{% url 'savings' %}">Épargne Gabon</a>
+    <a class="tab {% if active == 'opp' %}active{% endif %}" href="{% url 'opportunities' %}">Opportunités</a>
+    <a class="tab" style="margin-left:auto" href="{% url 'logout' %}">Déconnexion</a>
+  </div>
+
+  {% if messages %}
+    {% for m in messages %}<div class="msg">{{ m }}</div>{% endfor %}
+  {% endif %}
+
+  {% block content %}{% endblock %}
+
+  <footer>Données stockées dans la base de données de l'app.</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Connexion — Tableau de bord</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'tracker/style.css' %}">
+</head>
+<body>
+  <div class="login-wrap">
+    <h1 style="font-family:'Lora',serif">🧭 Tableau de bord</h1>
+    <form method="post">
+      {% csrf_token %}
+      <input type="password" name="password" placeholder="Mot de passe" autofocus>
+      <button class="btn" style="width:100%;margin-top:10px" type="submit">Entrer</button>
+      {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    </form>
+  </div>
+</body>
+</html>

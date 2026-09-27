@@ -1,0 +1,59 @@
+{% extends "tracker/base.html" %}
+{% block content %}
+<div class="grid">
+  {% for g in goals %}
+  <div class="card">
+    <form method="post" action="{% url 'delete_goal' g.pk %}" style="position:absolute;top:0;right:0">
+      {% csrf_token %}
+      <button class="del" type="submit" title="Supprimer">✕</button>
+    </form>
+    <h3>{{ g.name }}</h3>
+    <p class="when">{{ g.when_label }}</p>
+    <p class="obj">{{ g.objective }}</p>
+    <form method="post" action="{% url 'cycle_status' g.pk %}" style="display:inline">
+      {% csrf_token %}
+      <button class="status-btn s{{ g.status }}" type="submit">● {{ g.status_label }}</button>
+    </form>
+    <form method="post" action="{% url 'update_period' g.pk %}" class="editrow">
+      {% csrf_token %}
+      <label>Début
+        <select name="start_month">
+          {% for val, label in months %}<option value="{{ val }}" {% if val == g.start_month %}selected{% endif %}>{{ label }}</option>{% endfor %}
+        </select>
+      </label>
+      <label>Fin
+        <select name="end_month">
+          {% for val, label in months %}<option value="{{ val }}" {% if val == g.end_month %}selected{% endif %}>{{ label }}</option>{% endfor %}
+        </select>
+      </label>
+      <button class="btn" type="submit" style="padding:6px 12px;font-size:12px">OK</button>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="addbox">
+  <h4>+ Nouvel objectif</h4>
+  <form method="post">
+    {% csrf_token %}
+    <div class="row">
+      <input name="name" placeholder="Nom de l'objectif" required>
+      <input name="when_label" placeholder="Quand (ex: Nov. 2026)">
+    </div>
+    <div class="row"><textarea name="objective" placeholder="Objectif en une phrase"></textarea></div>
+    <button class="btn" type="submit" name="add_goal" value="1">Ajouter</button>
+  </form>
+</div>
+
+<div class="rule">
+  <h2>Règle de l'année</h2>
+  <ul>
+    <li>UNA peut se libérer <span>→ on regarde.</span></li>
+    <li>Kômian peut répondre <span>→ on regarde.</span></li>
+    <li>Une autre activité peut arriver <span>→ on regarde.</span></li>
+    <li>Le concours arrive <span>→ on est préparée.</span></li>
+    <li>INP-HB devient la voie principale <span>→ le dossier est prêt.</span></li>
+    <li>Le Gabon reste un projet à part entière <span>→ dans tous les scénarios.</span></li>
+  </ul>
+</div>
+{% endblock %}

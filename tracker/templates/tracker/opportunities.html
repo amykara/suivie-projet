@@ -1,0 +1,34 @@
+{% extends "tracker/base.html" %}
+{% block content %}
+<div class="searchlinks">
+  {% for label, query in search_links %}
+  <a href="https://www.google.com/search?q={{ query|urlencode }}" target="_blank" rel="noopener">🔎 {{ label }}</a>
+  {% endfor %}
+</div>
+
+<div class="addbox">
+  <h4>+ Ajouter une opportunité suivie</h4>
+  <form method="post">
+    {% csrf_token %}
+    <div class="row">
+      <input name="title" placeholder="Titre (ex: Stage réseaux - X)" required>
+      <input name="url" placeholder="Lien (optionnel)">
+    </div>
+    <div class="row"><textarea name="note" placeholder="Note / statut"></textarea></div>
+    <button class="btn" type="submit">Ajouter</button>
+  </form>
+</div>
+
+{% for o in opportunities %}
+<div class="opp">
+  <div>
+    <strong>{{ o.title }}</strong><br>
+    {% if o.note %}<span style="font-size:13px;color:var(--sub)">{{ o.note }}</span><br>{% endif %}
+    {% if o.url %}<a href="{{ o.url }}" target="_blank" rel="noopener">{{ o.url }}</a>{% endif %}
+  </div>
+  <form method="post" action="{% url 'delete_opportunity' o.pk %}">{% csrf_token %}<button class="del" style="position:static" type="submit">✕</button></form>
+</div>
+{% empty %}
+<p style="color:var(--sub);font-size:14px">Aucune opportunité suivie pour l'instant.</p>
+{% endfor %}
+{% endblock %}

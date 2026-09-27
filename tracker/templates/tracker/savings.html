@@ -1,0 +1,51 @@
+{% extends "tracker/base.html" %}
+{% block content %}
+<div class="savecard">
+  <form method="post" class="row" style="margin-bottom:14px">
+    {% csrf_token %}
+    <div style="flex:1">
+      <label style="font-size:12px;color:var(--sub)">Objectif (FCFA)</label>
+      <input type="number" name="target_amount" value="{{ config.target_amount }}">
+    </div>
+    <div style="flex:1">
+      <label style="font-size:12px;color:var(--sub)">Date du voyage</label>
+      <input type="date" name="target_date" value="{{ config.target_date|date:'Y-m-d' }}">
+    </div>
+    <button class="btn" type="submit" name="save_config" value="1" style="align-self:flex-end">Mettre à jour</button>
+  </form>
+
+  <div class="savenums"><span>Économisé</span><span>Objectif</span></div>
+  <div class="savenums"><b>{{ total }} F</b><b>{{ config.target_amount }} F</b></div>
+  <div class="bar-track"><div class="bar-fill" style="width:{{ pct }}%"></div></div>
+
+  <div class="stat-row">
+    <div class="stat"><span class="n">{{ remaining }} F</span><span class="l">restant à économiser</span></div>
+    <div class="stat"><span class="n">{{ months_left|default:"—" }}</span><span class="l">mois restants</span></div>
+    <div class="stat"><span class="n">{{ monthly_needed|default:"—" }} F</span><span class="l">à mettre de côté / mois</span></div>
+  </div>
+</div>
+
+<div class="addbox">
+  <h4>+ Ajouter un versement</h4>
+  <form method="post" class="row">
+    {% csrf_token %}
+    <input type="number" name="amount" placeholder="Montant (FCFA)" required>
+    <input name="note" placeholder="Note (optionnel)">
+    <button class="btn" type="submit" name="add_entry" value="1">Enregistrer</button>
+  </form>
+</div>
+
+<div class="savecard">
+  {% for e in entries %}
+  <div class="entry">
+    <span>{{ e.note|default:"Versement" }} · {{ e.created_at|date:"d/m/Y" }}</span>
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="amt">+{{ e.amount }} F</span>
+      <form method="post" action="{% url 'delete_entry' e.pk %}">{% csrf_token %}<button class="del" style="position:static" type="submit">✕</button></form>
+    </span>
+  </div>
+  {% empty %}
+  <p style="color:var(--sub);font-size:14px;margin:0">Aucun versement enregistré.</p>
+  {% endfor %}
+</div>
+{% endblock %}
